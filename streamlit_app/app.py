@@ -121,7 +121,11 @@ with tab_data:
     st.dataframe(df.assign(label=df["active"].map({1: "active", 0: "inactive"}))
                  .drop(columns="active"), use_container_width=True, height=320)
     fig, ax = plt.subplots(figsize=(6, 3))
-    sns.histplot(np.log10(df["ic50_nM"]), bins=30, hue=df["active"].map({1: "active", 0: "inactive"}), ax=ax)
+    plot_df = pd.DataFrame({
+        "logIC50": np.log10(df["ic50_nM"].to_numpy()),
+        "label": df["active"].map({1: "active", 0: "inactive"}).to_numpy(),
+    })
+    sns.histplot(plot_df, x="logIC50", bins=30, hue="label", ax=ax)
     ax.set_xlabel("log10 IC50 (nM)")
     st.pyplot(fig)
 
